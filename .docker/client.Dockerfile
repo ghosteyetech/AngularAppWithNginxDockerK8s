@@ -3,7 +3,7 @@
 #---------------------
 
 # Building node from LTS version
-FROM node:11.14.0-alpine as builder
+FROM node:12.16.2-alpine as builder
 
 # Copying all necessary files required for npm install
 
@@ -14,11 +14,11 @@ COPY package.json tsconfig.json tslint.json ./
 RUN npm install
 
 # Create application directory and copy node modules to it
-RUN mkdir /frontend-env
-RUN cp -R ./node_modules ./frontend-env
+RUN mkdir /AngularAppWithNginxDocker
+RUN cp -R ./node_modules ./AngularAppWithNginxDocker
 
 # Setting application directory as work directory
-WORKDIR /frontend-env
+WORKDIR /AngularAppWithNginxDocker
 
 # Copying application code to container application directory
 COPY . .
@@ -37,7 +37,6 @@ COPY .nginx/default.conf /etc/nginx/conf.d
 
 # Copy dist folder from  the builder to nginx public folder(STAGE 1)
 
-COPY --from=builder /frontend-env/dist/frontend-env /usr/share/nginx/html
+COPY --from=builder /AngularAppWithNginxDocker/dist/AngularAppWithNginxDocker /usr/share/nginx/html
 
 CMD ["nginx","-g","daemon off;"]
-
